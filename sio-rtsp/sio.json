@@ -2,7 +2,7 @@
     "one-person-one-car" : {
         "pipeline"      : "./share/pipelines/TrafficAnalytics/TrafficAnalyticsRTSP.yaml",
         "restartPolicy" : "restart",
-        "params" : {
+        "parameters" : {
             "VIDEO_IN" : "rtsp://live555/one-person-one-car.mkv",
             "fpsLimit" : "1",
             "sourceId" : "one-person-one-car",
