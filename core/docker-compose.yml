@@ -1,0 +1,15 @@
+version: "2.0"
+
+services:
+  # Dummy Service
+  dummy:
+    image: busybox
+    container_name: dummy
+    hostname: dummy
+    networks:
+      - sighthound
+
+networks:
+  sighthound:
+    name: sighthound
+    driver: bridge

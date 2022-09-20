@@ -1,0 +1,31 @@
+version: "2"
+
+services:  
+  live555:
+  # TODO: Change to release image
+    image: "gcr.io/test-bai/live555:latest"
+    restart: unless-stopped
+    volumes:
+      - ./video:/mnt
+    networks:
+      - sighthound
+
+  sio:
+  # TODO: Change to release image
+    image: gcr.io/test-bai/sio:220822-08200c0e-amd64
+    restart: always
+    depends_on:
+      - live555
+    volumes:
+      - /data/sighhound/license/sighthound-license.json:/sighthound/sio/share/sighthound-license.json:ro
+      - ./sio.json:/sio.json:ro
+      - /data/sighthound/media:/data/sighthound/media:rw
+    command: > 
+      /sighthound/sio/bin/runPipelineSet /sio.json
+    networks:
+      - sighthound
+
+networks:
+  sighthound:
+    name: sighthound
+    external: true
