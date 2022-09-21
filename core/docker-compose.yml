@@ -11,5 +11,4 @@ services:
 
 networks:
   sighthound:
-    name: sighthound
     driver: bridge

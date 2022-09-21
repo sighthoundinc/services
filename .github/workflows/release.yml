@@ -14,7 +14,7 @@ jobs:
     steps:
     - name: Compress services
       run: >
-        tar -zcvf sh-services-${{ github.event.release.tag_name }}.tar.gz README core mcp rabbitmq sio-rtsp
+        tar -zcvf sh-services-${{ github.event.release.tag_name }}.tar.gz README.md core mcp rabbitmq sio-rtsp
     - uses: actions/upload-artifact@v3
       with:
         name: sh-services-${{ github.event.release.tag_name }}
