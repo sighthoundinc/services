@@ -16,7 +16,7 @@ services:
       - core_sighthound
 
   mcp:
-    image: "gcr.io/test-bai/mcp:latest"
+    image: ${MCP_DOCKER_IMAGE}
     restart: unless-stopped
     depends_on:
       - influxdb

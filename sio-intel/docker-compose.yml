@@ -6,23 +6,20 @@ services:
     image: "gcr.io/test-bai/live555:latest"
     restart: unless-stopped
     volumes:
-      - ./video:/mnt
+      - ./test-data:/mnt
     networks:
       - sighthound
 
   sio:
-  # TODO: Change to release image
-    image: gcr.io/test-bai/sio:220920-f914769a-amd64
+    image: ${SIO_DOCKER_IMAGE}-${SIO_ARCH}
     restart: always
-    depends_on:
-      - live555
     volumes:
       - /data/sighthound/license/sighthound-license.json:/sighthound/sio/share/sighthound-license.json:ro
       - ./sio.json:/sio.json:ro
       - /data/sighthound/media:/data/sighthound/media:rw
       - /data/sighthound/.cache:/root/.sio/modelCache
-    environment:
-      -  SIO_INFERENCE_RUNTIME=D3V
+    env_file:
+      - .env
     command: > 
       /sighthound/sio/bin/runPipelineSet /sio.json
     networks:

@@ -2,8 +2,7 @@ version: "2"
 
 services:  
   sio:
-  # TODO: Change to release image
-    image: gcr.io/test-bai/sio:220921-ca10b574-r32.4.3-arm64v8
+    image: ${SIO_DOCKER_IMAGE}-${SIO_ARCH}
     restart: always
     volumes:
       - /data/sighthound/license/sighthound-license.json:/sighthound/sio/share/sighthound-license.json:ro
