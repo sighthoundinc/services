@@ -1,0 +1,21 @@
+name: release
+
+on: 
+  release:
+    types: [created]
+
+jobs:
+  release:
+    strategy:
+      matrix:
+        python: ['3.8']
+        platform: [ubuntu-latest]
+    runs-on: ${{ matrix.platform }}
+    steps:
+    - name: Compress services
+      run: >
+        tar -zcvf sh-services-${{ github.event.release.tag_name }}.tar.gz README core mcp rabbitmq sio-rtsp
+    - uses: actions/upload-artifact@v3
+      with:
+        name: sh-services-${{ github.event.release.tag_name }}
+        path: sh-services-${{ github.event.release.tag_name }}.tar.gz
