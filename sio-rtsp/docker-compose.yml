@@ -17,10 +17,12 @@ services:
     depends_on:
       - live555
     volumes:
-      - /data/sighhound/license/sighthound-license.json:/sighthound/sio/share/sighthound-license.json:ro
+      - /data/sighthound/license/sighthound-license.json:/sighthound/sio/share/sighthound-license.json:ro
       - ./sio.json:/sio.json:ro
       - /data/sighthound/media:/data/sighthound/media:rw
       - /data/sighthound/.cache:/root/.sio/modelCache
+    environment:
+      -  SIO_INFERENCE_RUNTIME=D3V
     command: > 
       /sighthound/sio/bin/runPipelineSet /sio.json
     networks:
