@@ -4,7 +4,6 @@
         "restartPolicy" : "restart",
         "parameters" : {
             "VIDEO_IN" : "rtsp://live555/one-person-one-car.mkv",
-            "fpsLimit" : "1",
             "sourceId" : "one-person-one-car",
             "recordTo":"/data/sighthound/media/output/video/one-person-one-car/",
             "imageSaveDir":"/data/sighthound/media/output/image/one-person-one-car/",
@@ -13,7 +12,9 @@
             "amqpExchange":"anypipe",
             "amqpUser":"guest",
             "amqpPassword":"guest",
-            "amqpErrorOnFailure":"true"
+            "amqpErrorOnFailure":"true",
+            "extensionModules": "/lib/sio/plugins/DistanceSensor.py",
+            "extensionConfigurations": "/etc/sio/sio.live555.json"
         }
     }
 }

@@ -8,4 +8,4 @@
 
 ### Live555 mode
 
-`docker compose --env-file live555.env -f docker-compose.live555.yml up -d`
+`docker compose -f docker-compose.standalone.yml --env-file=live555.env up -d`
