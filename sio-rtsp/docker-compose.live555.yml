@@ -16,12 +16,13 @@ services:
     volumes:
       - /data/sighthound/license/sighthound-license.json:/sighthound/sio/share/sighthound-license.json:ro
       - ./conf/:/etc/sio/:ro
+      - ./plugins/:/lib/sio/plugins/:ro
       - /data/sighthound/media:/data/sighthound/media:rw
       - /data/sighthound/.cache:/root/.sio/modelCache
     env_file:
       - .env
     command: > 
-      /sighthound/sio/bin/runPipelineSet /etc/sio/sio.json
+      /sighthound/sio/bin/runPipelineSet ${SIO_ENTRYPOINT}
     networks:
       - sighthound
 
