@@ -1,15 +1,6 @@
 version: "2"
 
 services:  
-  live555:
-  # TODO: Change to release image
-    image: "gcr.io/test-bai/live555:latest"
-    restart: unless-stopped
-    volumes:
-      - ./test-data:/mnt
-    networks:
-      - sighthound
-
   sio:
     image: ${SIO_DOCKER_IMAGE}:${SIO_DOCKER_TAG}${SIO_ARCH}
     restart: always
