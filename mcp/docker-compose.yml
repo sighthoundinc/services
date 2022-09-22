@@ -22,7 +22,7 @@ services:
       - influxdb
     volumes:
       - ${MEDIA_PATH}:/data/sighthound/media:rw
-      - ./mcp.yml:/etc/mcpd/default.json:ro
+      - ./conf/mcp.yml:/etc/mcpd/default.json:ro
     ports:
       - "8089:8088"
     env_file:

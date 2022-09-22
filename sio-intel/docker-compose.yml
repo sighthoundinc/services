@@ -15,13 +15,13 @@ services:
     restart: always
     volumes:
       - /data/sighthound/license/sighthound-license.json:/sighthound/sio/share/sighthound-license.json:ro
-      - ./sio.json:/sio.json:ro
+      - ./conf/:/etc/sio/:ro
       - /data/sighthound/media:/data/sighthound/media:rw
       - /data/sighthound/.cache:/root/.sio/modelCache
     env_file:
       - .env
     command: > 
-      /sighthound/sio/bin/runPipelineSet /sio.json
+      /sighthound/sio/bin/runPipelineSet /etc/sio/sio.json
     networks:
       - sighthound
 

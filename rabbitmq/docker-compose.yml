@@ -5,8 +5,8 @@ services:
     image: "docker.io/rabbitmq:3.8-management"
     restart: unless-stopped
     volumes:
-      - ./definitions.json:/etc/rabbitmq/definitions.json
-      - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+      - ./conf/definitions.json:/etc/rabbitmq/definitions.json
+      - ./conf/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
       - rabbitmq_persistent_storage:/var/lib/rabbitmq
     ports:
     # For debugging
