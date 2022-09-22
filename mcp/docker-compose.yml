@@ -16,7 +16,7 @@ services:
       - core_sighthound
 
   mcp:
-    image: ${MCP_DOCKER_IMAGE}
+    image: ${MCP_DOCKER_IMAGE}:${MCP_DOCKER_TAG}
     restart: unless-stopped
     depends_on:
       - influxdb
