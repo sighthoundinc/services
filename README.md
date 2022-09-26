@@ -22,6 +22,7 @@ SIO is the analytics engine processing the live video feed(s), or provided image
 AMQP broker. If the device operates in a standalone mode, must be enabled. If external AMQP broker is used, SIO and MCP configuration must be adjusted
 #### core
 
+Core sighthound service that creates the `core_sighthound` docker network.
 ### Configuration
 
 First create the data dirs
