@@ -8,6 +8,7 @@
 # ---------------------------------------------------------------
 from conans import ConanFile
 import glob
+import os
 
 class WheelConan(ConanFile):
     python_requires = "conan-helper/1.0.13+c575aaab@sighthound/master"
@@ -23,7 +24,12 @@ class WheelConan(ConanFile):
         pass
 
     def package(self):
-        self.run("unzip " + self.source_folder + " -d " + self.package_folder)
+        # Copy readme
+        self.run(f"cp {self.source_folder}/README.md {self.package_folder}")
+        # Copy services
+        for name in glob.glob(self.source_folder + "/*"):
+            if os.path.isdir(name):
+                self.run(f"cp -r {name} {self.package_folder}")
 
     def package_info(self):
         pass
