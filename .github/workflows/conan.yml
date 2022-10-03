@@ -1,0 +1,46 @@
+name: Conan Release
+
+on:
+  release:
+    types: [created]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ${{ matrix.os }}
+    name: ${{ matrix.os[1] }} - ${{ matrix.CONAN_PROFILE }}
+    strategy:
+      matrix:
+        include:
+        - os: [ self-hosted, macOS, X64 ]
+          CONAN_PROFILE: default
+          debug: true
+
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+      with:
+        lfs: true
+        fetch-depth: 0
+
+    - name: Change version
+      run: |
+        sed -i "" "s|1.0.0|${{ github.event.release.tag_name }}|" conanfile.py
+        sed -i "" "s|1.0.0|${{ github.event.release.tag_name }}|" version.properties
+
+    - name: Conan Env (common)
+      shell: bash
+      run: .github/workflows/scripts/setupBaseEnv.sh ${{ github.event.release.tag_name }}
+
+    # Environment (specific for this project)
+    - name: Conan Env (project)
+      shell: bash
+      run: |
+        echo "CONAN_PROFILE=${{ matrix.CONAN_PROFILE}}" >> $GITHUB_ENV
+
+    - name: MacOS and Windows Build
+      if: runner.os != 'Linux'
+      shell: bash
+      run: .github/workflows/scripts/buildAll.sh
