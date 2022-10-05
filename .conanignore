@@ -1,5 +1,6 @@
 .conanignore
 .gitignore
 .github
+conanfile.py
 docs
-version.properties
+./version.properties
