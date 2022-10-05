@@ -28,6 +28,7 @@ class WheelConan(ConanFile):
         # Copy services
         services = [fn for fn in glob.glob(self.source_folder + "/*") if os.path.basename(fn) not in ignore]
         for service in services:
+            print(f"Adding {service}")
             self.run(f"cp -r {service} {self.package_folder}")
 
     def package_info(self):
