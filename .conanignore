@@ -1,0 +1,5 @@
+.conanignore
+.gitignore
+.github
+docs
+version.properties

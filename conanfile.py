@@ -24,10 +24,9 @@ class WheelConan(ConanFile):
         pass
 
     def package(self):
-        # Copy readme
-        self.run(f"cp {self.source_folder}/README.md {self.package_folder}")
+        ignore = open('.conanignore', 'r').readlines()
         # Copy services
-        services = [fn for fn in glob.glob(self.source_folder + "/*") if (os.path.isdir(fn) and not os.path.basename(fn).startswith('docs'))]
+        services = [fn for fn in glob.glob(self.source_folder + "/*") if os.path.basename(fn) not in ignore]
         for service in services:
             self.run(f"cp -r {service} {self.package_folder}")
 
