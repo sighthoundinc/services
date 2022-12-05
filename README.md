@@ -72,6 +72,7 @@ bash ./scripts/services-helper.sh merge
 
 
 ```
+docker network create sh-device-ui_sh-ui-net || true
 bash ./scripts/services-helper.sh up
 ```
 
