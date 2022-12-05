@@ -31,7 +31,7 @@ First create the data dirs
 5. Install SIO license in `/data/sighthound/license/sighthound-license.json`
 6. Uncompress services tarball into `/data/sighthound/services`
 7. Modify the `sio.json` file corresponding your sio selected configuration. (Setting the right URL, pipeline parameters...)
-
+8. Finally, create the docker .env files by running: `./scripts/services-helper.sh merge`
 
 #### SIO pipeline parameters
 
@@ -54,14 +54,26 @@ imageSaveDir: Path for image storage. Should be: /data/sighthound/media/output/i
 
 For more advanced options visit [VehicleAnalytics Documentation](https://dev.sighthound.com/sio/pipelines/VehicleAnalytics/) and [TrafficAnalytics Documentation](https://dev.sighthound.com/sio/pipelines/TrafficAnalytics/)
 
+### Changing Docker env variables
+
+If you need to modify the `.env` file of a service, simply create a new `.env file` like this
+
+```
+echo "SIO_DOCKER_TAG=r221202" >  sio/conf/0009-debug.env
+```
+
+and then update the services:
+
+```
+bash ./scripts/services-helper.sh merge
+```
+
 ### Deployment
 
-Note: On some devices the `--env-file` flag is not available. Please use this instead:
-`cat conf/default.env > .env && cat conf/custom.env >> .env`
 
-1. `cd core && docker-compose up -d --env-file=conf/default.env ; cd -`
-2. `cd rabbitmq && docker-compose up -d --env-file=conf/default.env ; cd -`
-3. `cd mcp && docker-compose up -d --env-file=conf/default.env ; cd -`
+```
+bash ./scripts/services-helper.sh up
+```
 
 
 At this point you can test your deployment by going to:
