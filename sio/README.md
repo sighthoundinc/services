@@ -7,7 +7,7 @@ Choose one of the following operation modes
 ### Camera (default)
 Just run:
 ```
-../scripts/services-helper.sh up sio
+../scripts/sh-services up sio
 # or docker compose up -d
 ```
 
@@ -16,8 +16,8 @@ Just run:
 Run the following commands:
 ```
 cp examples/live555/* conf
-../scripts/services-helper.sh merge sio
-../scripts/services-helper.sh up sio
+../scripts/sh-services merge sio
+../scripts/sh-services up sio
 ```
 #### UI compatibility
 The UI uses a legacy merge tool and for that reason, configurations need to go in `custom.env`
@@ -32,7 +32,7 @@ cp examples/live555/0099-example.env conf/custom.env
 Run the following commands:
 ```
 cp examples/plugins/* conf
-../scripts/services-helper.sh merge sio
-../scripts/services-helper.sh up sio
+../scripts/sh-services merge sio
+../scripts/sh-services up sio
 ```
 
