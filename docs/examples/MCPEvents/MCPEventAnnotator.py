@@ -119,17 +119,27 @@ class MCPEventAnnotator:
             frame_count = frame_count + 1
             frame_ts = event_segment['start_ts'] + video_ts_ms
             frame_ts_next = event_segment['start_ts'] + video_ts_next
+            annotated_frame = False
             if ret == True:
                 if event_list_index < len(event_segment['events_list']):
                     next_event = event_segment['events_list'][event_list_index]
-                    if frame_ts <= next_event['frameTimestamp'] <= frame_ts_next:
+                    while frame_ts <= next_event['frameTimestamp'] <= frame_ts_next:
                         if self.annotate_frame_with_event(frame, next_event):
+                            print(f"Wrote frame {frame_count} and annotated with event at timestamp {next_event['frameTimestamp']}")
                             annotated_frame_count = annotated_frame_count +1
+                            annotated_frame = True
                         event_list_index = event_list_index + 1
+                        if event_list_index < len(event_segment['events_list']):
+                            next_event = event_segment['events_list'][event_list_index]
+                        else:
+                            break
+
+
                 self.annotate_frame_with_sensors(frame)
                 # Write the frame to the output files
                 output.write(frame)
-                print(f"Wrote frame {frame_count}")
+                if not annotated_frame:
+                    print(f"Wrote frame {frame_count} without event annotation")
                 frame = next_frame
                 ret = next_ret
             else:
