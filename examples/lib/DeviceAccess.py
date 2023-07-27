@@ -33,7 +33,7 @@ class DeviceAccess:
                                    '--key',
                                    help='The SSH key file (used instead of password if specified)')
 
-            self.argparser = argparser 
+            self.argparser = argparser
         return self.argparser
 
     def get_proxy_env(self):
@@ -62,6 +62,10 @@ class DeviceAccess:
                 print(f"No user specified, using {self.DEFAULT_USER}")
                 self.args.user=self.DEFAULT_USER
         return self.args
+
+    def get_free_space_data_part_mb(self):
+        return int(self.get_connection().run("df /data/ | awk '{print $4}' | tail -n 1").stdout)/1024
+
 
     def get_connection(self):
         args = self.get_args()
