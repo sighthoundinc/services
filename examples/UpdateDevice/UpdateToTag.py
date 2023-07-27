@@ -19,16 +19,27 @@ class UpdateToTag(DeviceAccess):
             return -1
         if args.remote is None:
             args.remote = 'origin'
-    
+
+        rc = 0
         with connection.cd('/data/sighthound/services'):
-            print(f"Stopping services")
-            connection.run(f'./scripts/sh-services down all', timeout=60*5)
-            connection.run(f'git fetch {args.remote}', env=self.get_proxy_env())
-            connection.run(f'git stash save')
-            connection.run(f'git reset --hard {args.reference}')
-            print(f"Restarting services")
-            connection.run(f'./scripts/sh-services up all', timeout=60*5)
-        return 0
+            try:
+                print(f"Stopping services")
+                connection.run(f'./scripts/sh-services down all', timeout=60*5)
+                print(f"Cleaning media to free space for new docker pulls")
+                connection.run(f'./scripts/sh-services clean_media')
+                connection.run(f'git fetch {args.remote}', env=self.get_proxy_env())
+                connection.run(f'git stash save')
+                connection.run(f'git reset --hard {args.reference}')
+                print(f"Restarting services")
+                connection.run(f'./scripts/sh-services up all', timeout=60*20)
+                print(f"Pruning containers and images")
+                connection.run(f'docker container prune -f')
+                connection.run(f'docker image prune -a -f')
+            except Exception as e:
+                print(f"Caught exception {e} attempting to update ${args.device}")
+                rc = -1
+
+        return rc
 
 if __name__ == '__main__':
     cmd = UpdateToTag()
