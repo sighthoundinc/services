@@ -22,3 +22,14 @@ Will perform commands on the device at `deviceip` which:
 * Fetch the `remotetag` from the git remote configured as `remotename`.
 * Restart all services.
 
+### DeviceCheck
+
+The command
+
+```
+python3 examples/UpdateDevice/DeviceCheck.py --device deviceip
+```
+
+Will perform commands on the device at `deviceip` which:
+* Check the available data space.
+* Ensure all enabled services are running.

@@ -66,6 +66,27 @@ class DeviceAccess:
     def get_free_space_data_part_mb(self):
         return int(self.get_connection().run("df /data/ | awk '{print $4}' | tail -n 1").stdout)/1024
 
+    def get_services_ps(self):
+        connection =  self.get_connection()
+        services = {}
+        with connection.cd('/data/sighthound/services'):
+            response = connection.run("./scripts/sh-services ps all").stdout
+            for line in response.splitlines():
+                fields = line.split()
+                if len(fields) >= 2:
+                    if fields[1] == 'disabled':
+                        services[fields[0]] = { 'enabled': False, 'running': False}
+                    elif fields[1] == 'enabled':
+                        services[fields[0]] = { 'enabled': True }
+                        if len(fields) >= 3:
+                            if fields[2] == '(running)':
+                                services[fields[0]]['running'] = True
+                            else:
+                                services[fields[0]]['running'] = False
+        return services
+
+    def get_device_name(self):
+        return self.get_args().device
 
     def get_connection(self):
         args = self.get_args()
