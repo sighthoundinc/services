@@ -24,6 +24,7 @@ and more.
 [SIO ImaVideoge Drawer](SIOImageDownloader): A utility that downloads MCP videos based on mediaEvents from SIO and it adds the objects to them.
 
 
+[UpdateDevice](UpdateDevice): Utilities used to update Sighthound devices (cameras/nodes).
 
 # License
 
