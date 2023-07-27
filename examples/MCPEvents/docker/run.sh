@@ -51,7 +51,7 @@ do
 done
 
 container_name="$(echo "$1-$2" | tr '.' '-' )"
-docker_args="${docker_args} --name ${container_name}"
+docker_args="${docker_args} --env PYTHONUNBUFFERED=1 --name ${container_name}"
 
 docker rm ${container_name} > /dev/null 2>&1
 
