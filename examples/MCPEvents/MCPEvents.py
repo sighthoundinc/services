@@ -122,8 +122,11 @@ class MCPEvents:
             completed_event_segments = self.completed_event_seg.get(sourceId, [])
             for event_seg in completed_event_segments:
                 event_seg.videos.append(media_event)
-                self.event_segment_complete(sourceId, event_seg)
-                self.completed_event_seg[sourceId].remove(event_seg)
+                try:
+                    self.event_segment_complete(sourceId, event_seg)
+                finally:
+                    # Always complete the event segment, even if we couldn't download vids
+                    self.completed_event_seg[sourceId].remove(event_seg)
 
 
 
