@@ -11,7 +11,7 @@ class UpdateToTag(DeviceAccess):
                                     help='The remote to use with git fetch command (default origin)')
         return self.argparser
     def main(self):
-        connection = super().get_connection()
+        connection = self.get_connection()
         args = self.get_args()
         if args.reference is None:
             print(f"Reference not specified, please specify a reference to upgrade to")

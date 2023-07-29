@@ -1,7 +1,8 @@
 from fabric import Connection
 import argparse
-from io import BytesIO
-
+from io import BytesIO, StringIO
+from lib.DeviceWebAPI import DeviceWebAPI
+import json
 
 class DeviceAccess:
     DEFAULT_USER = 'root'
@@ -10,6 +11,7 @@ class DeviceAccess:
     connection = None
     argparser = None
     env_json = None
+    web_api = None
 
     def get_parser(self,parent_test="",parent_description=""):
         if self.argparser is None:
@@ -88,6 +90,11 @@ class DeviceAccess:
     def get_device_name(self):
         return self.get_args().device
 
+    def get_password(self):
+        if self.get_args().password is None:
+            return self.DEFAULT_PASSWORD
+        return self.get_args().password
+
     def get_connection(self):
         args = self.get_args()
         if args.device is None:
@@ -104,9 +111,7 @@ class DeviceAccess:
                         "password": args.password
                     })
             elif args.password is not None or self.DEFAULT_PASSWORD is not None:
-                password = args.password
-                if password is None:
-                    password = self.DEFAULT_PASSWORD
+                password = self.get_password()
                 print("Connecting with user/pass")
                 self.connection = Connection(
                     host=f'{args.user}@{args.device}',
@@ -122,3 +127,22 @@ class DeviceAccess:
                         "look_for_keys": False
                     })
         return self.connection
+
+    def get_web_api(self):
+        if self.web_api is None:
+            self.web_api = DeviceWebAPI({'password' : self.get_password(), 'host' : self.get_args().device })
+        return self.web_api
+
+    def write_config(self, service, file, content):
+        found = False
+        for entry in self.get_web_api().get_response(f'analytics/config/{service}'):
+            if entry.get('filename',None) == file:
+                found = True
+                break
+        if not found:
+            # If the file isn't there yet we don't currently (afaik) have a way to add it, so use SSH to do this
+            print(f"File {file} not yet found on the server for service {service}, adding")
+            fd = StringIO(str(content))
+            self.get_connection().put(fd,f'/data/sighthound/services/{service}/conf/{file}')
+        self.get_web_api().put_request(f'analytics/config/{service}/{file}', json = { 'config' : content })
+
