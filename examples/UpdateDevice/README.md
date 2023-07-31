@@ -33,3 +33,12 @@ python3 examples/UpdateDevice/DeviceCheck.py --device deviceip
 Will perform commands on the device at `deviceip` which:
 * Check the available data space.
 * Ensure all enabled services are running.
+
+### ShServices
+
+The command
+
+```
+python3 examples/UpdateDevice/ShServices.py --args "restart all"
+```
+Will run the "restart all" command on the sh-services sccript for the device at `deviceip`.
