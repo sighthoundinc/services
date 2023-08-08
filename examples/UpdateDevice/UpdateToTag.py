@@ -24,14 +24,14 @@ class UpdateToTag(DeviceAccess):
         with connection.cd('/data/sighthound/services'):
             try:
                 print(f"Stopping services")
-                connection.run(f'./scripts/sh-services down all', timeout=60*5)
+                connection.run(f'./scripts/sh-services down all')
                 print(f"Cleaning media to free space for new docker pulls")
                 connection.run(f'./scripts/sh-services clean_media')
                 connection.run(f'git fetch {args.remote}', env=self.get_proxy_env())
                 connection.run(f'git stash save')
                 connection.run(f'git reset --hard {args.reference}')
                 print(f"Restarting services")
-                connection.run(f'./scripts/sh-services up all', timeout=60*20)
+                connection.run(f'./scripts/sh-services up all')
                 print(f"Pruning containers and images")
                 connection.run(f'docker container prune -f')
                 connection.run(f'docker image prune -a -f')
