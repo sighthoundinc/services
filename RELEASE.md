@@ -1,5 +1,9 @@
 # Release Notes
 
+## V1.5.20
+
+- ALPRDemo: Fix bug when make/model/color missing
+
 ## V1.5.19
 
 - Update SIO to r250201

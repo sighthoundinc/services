@@ -49,7 +49,7 @@ When deploying on Jetson devices, additional configuration is required:
    ```
 6. Execute the following command to get it up and running:
    ```bash
-   docker compose up
+   docker-compose up
    ```
 
 ## Testing the API

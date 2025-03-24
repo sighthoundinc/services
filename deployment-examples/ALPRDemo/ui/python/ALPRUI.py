@@ -488,7 +488,8 @@ class MainFrame(wx.Frame):
             else:
                 dt = epoch_to_string(int(entry['time']))
             ctrl.InsertItem(index, f"{dt}")
-            ctrl.SetItem(index, 1, f"{entry['make']}/{entry['model']}/{entry['color']}")
+            if('make' in entry and 'model' in entry and 'color' in entry):
+                ctrl.SetItem(index, 1, f"{entry['make']}/{entry['model']}/{entry['color']}")
             ctrl.SetItem(index, 2, f"{entry['string']}/{entry['region']}")
             ctrl.SetItem(index, 3, f"{entry['sourceId']}")
             ctrl.SetItem(index, 4, f"{entry['oid']}")
