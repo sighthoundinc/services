@@ -1,5 +1,9 @@
 # Release Notes
 
+## V1.5.21
+
+- README: Add event processing service instructions
+
 ## V1.5.20
 
 - ALPRDemo: Fix bug when make/model/color missing

@@ -285,6 +285,162 @@ For more advanced options, consult:
 - [TrafficAnalytics Documentation](https://dev.sighthound.com/sio/pipelines/TrafficAnalytics/)
 
 ---
+## Optional Configuration: Sighthound Event Processing Service
+
+The **Sighthound Event Processing Service** enables additional analytics by detecting and counting objects (such as vehicles, persons, and bicycles) based on defined line-crossing sensors and presence area sensors.
+
+This optional service:
+- Detects objects crossing predefined lines (Count Sensors).
+- Monitors objects within defined regions (Presence Sensors).
+- Reports events, including object counts and directional crossings.
+
+### Configuring Count Sensors (Line Crossing)
+
+Define line sensors to detect objects crossing specific lines:
+
+**Example configuration (`sensors.json`):**
+```json
+{
+  "countSensors": [
+    {
+      "id": "87654321-0030-4355-8ab3-a493a6de122e",
+      "name": "COUNT_VEHICLE_1",
+      "sendUpdate": "onChange",
+      "classes": ["vehicles"],
+      "lineCoordinates": [
+        {"x": 0.25, "y": 0},
+        {"x": 0.25, "y": 1}
+      ],
+      "clockwiseName": "NORTH",
+      "counterclockwiseName": "SOUTH"
+    }
+  ]
+}
+```
+
+**Field descriptions:**
+- `id`: Unique identifier for the sensor.
+- `name`: Descriptive name of the sensor.
+- `sendUpdate`: Determines when events are sent (`always` or `onChange`).
+- `classes`: Object types to detect (e.g., vehicles, people, bicycles).
+- `lineCoordinates`: Two points defining the detection line (normalized coordinates).
+- `clockwiseName`: Label for objects crossing the line in a clockwise direction (If the line coordinates were a vector, imagine rotating it 90 degrees)
+- `counterclockwiseName`: Label for objects crossing counterclockwise.
+
+**Event output example:**
+```json
+"sensorEvents": {
+  "countSensor": {
+    "87654321-0030-4355-8ab3-a493a6de122e": [
+      {
+        "direction": "counterclockwise",
+        "startedAt": 1631233275082,
+        "cwCount": 0,
+        "ccwCount": 1,
+        "links": [
+          {
+            "metaClass": "vehicles",
+            "id": "06138c16-ec45-45a9-bb57-31a08941e413"
+          }
+        ],
+        "eventId": "12345678-0030-4355-8ab3-a493a6de122e"
+      }
+    ]
+  }
+}
+```
+
+Detailed count sensor documentation is available [here](https://sighthoundinc.github.io/services/schemas/anypipe/anypipe.html#tab-pane_sensorEvents_pattern1_pattern3_items_oneOf_i1).
+
+### Configuring Presence Sensors (Region Detection)
+
+Define presence sensors to detect objects within specific regions:
+
+**Example configuration (`sensors.json`):**
+```json
+{
+  "includeMetaClasses": true,
+  "presenceSensors": [
+    {
+      "id": "87654321-0030-4355-8ab3-a493a6de122e",
+      "name": "PRESENCE_PEOPLE_1",
+      "sendUpdate": "onActive",
+      "classes": ["people"],
+      "intersectionThreshold": 2,
+      "polygon": [
+        {"x": 668, "y": 1108},
+        {"x": 640, "y": 752},
+        {"x": 868, "y": 356}
+      ]
+    }
+  ]
+}
+```
+
+**Field descriptions:**
+- `includeMetaClasses`: Include meta-class information in the events.
+- `id`: Unique identifier for the sensor.
+- `name`: Descriptive name of the sensor.
+- `sendUpdate`: Frequency of sending updates (`onActive`, `onChange`, `onCountChange`).
+  - onActive: If at least one object in the scene send updates every frame.
+  - onChange: If an object enters or exits the Area.
+  - onCountChange: If the total amount of objects inside an area change.
+- `classes`: Object types to monitor (e.g., vehicles, people, bicycles).
+- `intersectionThreshold`: Minimum percentage of the object area required to trigger the sensor.
+- `polygon`: Points defining the region of interest.
+
+**Event output example:**
+```json
+"sensorEvents": {
+  "presenceSensor": {
+    "87654321-0030-4355-8ab3-a493a6de122e": [
+      {
+        "objectsInRegionCount": 1,
+        "objectsCountbyClass": {"person": 1},
+        "objectsCountbyMetaClass": {"people": 1},
+        "startedAt": 1628896071685,
+        "updateCount": 1,
+        "links": [
+          {
+            "metaClass": "people",
+            "id": "65891069-0030-4355-8ab3-a493a6de122e",
+            "startedAt": 1628896071685,
+            "union": 1.0,
+            "state": "enter"
+          }
+        ],
+        "eventId": "12345678-0030-4355-8ab3-a493a6de122e"
+      }
+    ]
+  }
+}
+```
+
+Detailed presence sensor documentation is available [here](https://sighthoundinc.github.io/services/schemas/anypipe/anypipe.html#tab-pane_sensorEvents_pattern1_pattern3_items_oneOf_i0).
+
+### Enabling Event Processing Service
+
+To enable these sensors, create a configuration file (e.g., `sensors.json`) and update the SIO configuration parameter:
+
+```json
+"sensorsConfigFile": "/path/to/your/sensors.json"
+```
+
+Leave this parameter empty (`''`) to disable the Event Analytics module.
+
+### Docker Configuration
+
+When running with Docker, ensure the directory containing `sensors.json` is correctly mounted:
+
+```yaml
+volumes:
+  - ./conf/:/etc/sio/:ro
+```
+
+This ensures the Event Processing Service can read your sensor configuration.
+
+
+---
 
 ## Changing Docker Environment Variables
 
